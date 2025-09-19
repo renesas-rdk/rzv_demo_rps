@@ -1,0 +1,494 @@
+{
+  "configById": {
+    "Image!2ko2px8": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {
+        "imageTopic": "/image_raw",
+        "annotations": {
+          "/hand_landmark_estimation/landmarks_visualization": {
+            "visible": true
+          },
+          "/hand_landmark_estimation/bbox_visualization": {
+            "visible": false
+          },
+          "/landmarks_visualization": {
+            "visible": true
+          },
+          "/bbox_visualization": {
+            "visible": true
+          }
+        }
+      }
+    },
+    "3D!18i6zy7": {
+      "layers": {
+        "845139cb-26bc-40b3-8161-8ab60af4baf5": {
+          "visible": true,
+          "frameLocked": true,
+          "label": "Grid",
+          "instanceId": "845139cb-26bc-40b3-8161-8ab60af4baf5",
+          "layerId": "foxglove.Grid",
+          "size": 10,
+          "divisions": 10,
+          "lineWidth": 1,
+          "color": "#248eff",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "order": 1
+        },
+        "30e5fcb1-b77d-4103-b8d3-e00c372ccff8": {
+          "displayMode": "auto",
+          "fallbackColor": "#dadada",
+          "showAxis": false,
+          "axisScale": 1,
+          "visible": true,
+          "frameLocked": true,
+          "instanceId": "30e5fcb1-b77d-4103-b8d3-e00c372ccff8",
+          "label": "URDF",
+          "layerId": "foxglove.Urdf",
+          "sourceType": "topic",
+          "url": "",
+          "filePath": "",
+          "parameter": "",
+          "topic": "/left_hand/robot_description",
+          "framePrefix": "left_hand/",
+          "order": 2,
+          "showOutlines": false
+        }
+      },
+      "cameraState": {
+        "perspective": true,
+        "distance": 0.7129586450102557,
+        "phi": 76.18185448597964,
+        "thetaOffset": -124.78483263211076,
+        "targetOffset": [
+          -0.22488334847227318,
+          -0.15789424049996142,
+          9.87305732212896e-18
+        ],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "fovy": 45,
+        "near": 0.1,
+        "far": 5000
+      },
+      "followMode": "follow-none",
+      "followTf": "left_hand/base",
+      "scene": {
+        "meshUpAxis": "z_up",
+        "backgroundColor": "#3d3d3d",
+        "transforms": {
+          "visible": false
+        }
+      },
+      "transforms": {
+        "frame:camera": {
+          "visible": false
+        },
+        "frame:right_hand/hand_base_link": {
+          "visible": false
+        },
+        "frame:right_hand/index_proximal": {
+          "visible": false
+        },
+        "frame:right_hand/index_intermediate": {
+          "visible": false
+        },
+        "frame:right_hand/middle_proximal": {
+          "visible": false
+        },
+        "frame:right_hand/middle_intermediate": {
+          "visible": false
+        },
+        "frame:right_hand/pinky_proximal": {
+          "visible": false
+        },
+        "frame:right_hand/pinky_intermediate": {
+          "visible": false
+        },
+        "frame:right_hand/ring_proximal": {
+          "visible": false
+        },
+        "frame:right_hand/ring_intermediate": {
+          "visible": false
+        },
+        "frame:right_hand/thumb_proximal_base": {
+          "visible": false
+        },
+        "frame:right_hand/thumb_proximal": {
+          "visible": false
+        },
+        "frame:right_hand/thumb_intermediate": {
+          "visible": false
+        },
+        "frame:right_hand/thumb_distal": {
+          "visible": false
+        },
+        "frame:left_hand/hand_base_link": {
+          "visible": false
+        },
+        "frame:left_hand/index_proximal": {
+          "visible": false
+        },
+        "frame:left_hand/index_intermediate": {
+          "visible": false
+        },
+        "frame:left_hand/middle_proximal": {
+          "visible": false
+        },
+        "frame:left_hand/middle_intermediate": {
+          "visible": false
+        },
+        "frame:left_hand/pinky_proximal": {
+          "visible": false
+        },
+        "frame:left_hand/pinky_intermediate": {
+          "visible": false
+        },
+        "frame:left_hand/ring_proximal": {
+          "visible": false
+        },
+        "frame:left_hand/ring_intermediate": {
+          "visible": false
+        },
+        "frame:left_hand/thumb_proximal_base": {
+          "visible": false
+        },
+        "frame:left_hand/thumb_proximal": {
+          "visible": false
+        },
+        "frame:left_hand/thumb_intermediate": {
+          "visible": false
+        },
+        "frame:left_hand/thumb_distal": {
+          "visible": false
+        },
+        "frame:right_hand/base": {
+          "visible": false
+        },
+        "frame:right_hand/index_tip": {
+          "visible": false
+        },
+        "frame:right_hand/middle_tip": {
+          "visible": false
+        },
+        "frame:right_hand/pinky_tip": {
+          "visible": false
+        },
+        "frame:right_hand/ring_tip": {
+          "visible": false
+        },
+        "frame:right_hand/thumb_tip": {
+          "visible": false
+        },
+        "frame:left_hand/base": {
+          "visible": false
+        },
+        "frame:left_hand/index_tip": {
+          "visible": false
+        },
+        "frame:left_hand/middle_tip": {
+          "visible": false
+        },
+        "frame:left_hand/pinky_tip": {
+          "visible": false
+        },
+        "frame:left_hand/ring_tip": {
+          "visible": false
+        },
+        "frame:left_hand/thumb_tip": {
+          "visible": false
+        }
+      },
+      "topics": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {}
+    },
+    "3D!2unqe1x": {
+      "cameraState": {
+        "distance": 0.6434451771223559,
+        "perspective": true,
+        "phi": 69.44042171219552,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          -0.27094993845734305,
+          0.07396642342737975,
+          5.2858848569229365e-19
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": -75.02527551177705,
+        "fovy": 45,
+        "near": 0.1,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {
+        "meshUpAxis": "z_up",
+        "backgroundColor": "#3d3d3d",
+        "transforms": {
+          "visible": false
+        }
+      },
+      "transforms": {
+        "frame:left_hand/base": {
+          "visible": false
+        },
+        "frame:left_hand/hand_base_link": {
+          "visible": false
+        },
+        "frame:left_hand/index_proximal": {
+          "visible": false
+        },
+        "frame:left_hand/index_intermediate": {
+          "visible": false
+        },
+        "frame:left_hand/index_tip": {
+          "visible": false
+        },
+        "frame:left_hand/middle_proximal": {
+          "visible": false
+        },
+        "frame:left_hand/middle_intermediate": {
+          "visible": false
+        },
+        "frame:left_hand/middle_tip": {
+          "visible": false
+        },
+        "frame:left_hand/pinky_proximal": {
+          "visible": false
+        },
+        "frame:left_hand/pinky_intermediate": {
+          "visible": false
+        },
+        "frame:left_hand/pinky_tip": {
+          "visible": false
+        },
+        "frame:left_hand/ring_proximal": {
+          "visible": false
+        },
+        "frame:left_hand/ring_intermediate": {
+          "visible": false
+        },
+        "frame:left_hand/ring_tip": {
+          "visible": false
+        },
+        "frame:left_hand/thumb_proximal_base": {
+          "visible": false
+        },
+        "frame:left_hand/thumb_proximal": {
+          "visible": false
+        },
+        "frame:left_hand/thumb_intermediate": {
+          "visible": false
+        },
+        "frame:left_hand/thumb_distal": {
+          "visible": false
+        },
+        "frame:left_hand/thumb_tip": {
+          "visible": false
+        },
+        "frame:right_hand/base": {
+          "visible": false
+        },
+        "frame:right_hand/hand_base_link": {
+          "visible": false
+        },
+        "frame:right_hand/index_proximal": {
+          "visible": false
+        },
+        "frame:right_hand/index_intermediate": {
+          "visible": false
+        },
+        "frame:right_hand/index_tip": {
+          "visible": false
+        },
+        "frame:right_hand/middle_proximal": {
+          "visible": false
+        },
+        "frame:right_hand/middle_intermediate": {
+          "visible": false
+        },
+        "frame:right_hand/middle_tip": {
+          "visible": false
+        },
+        "frame:right_hand/pinky_proximal": {
+          "visible": false
+        },
+        "frame:right_hand/pinky_intermediate": {
+          "visible": false
+        },
+        "frame:right_hand/pinky_tip": {
+          "visible": false
+        },
+        "frame:right_hand/ring_proximal": {
+          "visible": false
+        },
+        "frame:right_hand/ring_intermediate": {
+          "visible": false
+        },
+        "frame:right_hand/ring_tip": {
+          "visible": false
+        },
+        "frame:right_hand/thumb_proximal_base": {
+          "visible": false
+        },
+        "frame:right_hand/thumb_proximal": {
+          "visible": false
+        },
+        "frame:right_hand/thumb_intermediate": {
+          "visible": false
+        },
+        "frame:right_hand/thumb_distal": {
+          "visible": false
+        },
+        "frame:right_hand/thumb_tip": {
+          "visible": false
+        },
+        "frame:camera": {
+          "visible": false
+        }
+      },
+      "topics": {},
+      "layers": {
+        "grid": {
+          "visible": true,
+          "frameLocked": true,
+          "label": "Grid",
+          "instanceId": "3402e174-9da5-4bb6-90ea-f46d608be674",
+          "layerId": "foxglove.Grid",
+          "size": 10,
+          "divisions": 10,
+          "lineWidth": 1,
+          "color": "#248eff",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "5c7e8ac1-75c8-43ea-bf8a-29e84ac9d9c3": {
+          "displayMode": "auto",
+          "fallbackColor": "#dadada",
+          "showAxis": false,
+          "axisScale": 1,
+          "visible": true,
+          "frameLocked": true,
+          "instanceId": "5c7e8ac1-75c8-43ea-bf8a-29e84ac9d9c3",
+          "label": "URDF",
+          "layerId": "foxglove.Urdf",
+          "sourceType": "topic",
+          "url": "",
+          "filePath": "",
+          "parameter": "",
+          "topic": "/right_hand/robot_description",
+          "framePrefix": "right_hand/",
+          "order": 1,
+          "showOutlines": false
+        }
+      },
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {},
+      "followTf": "right_hand/base"
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "direction": "row",
+    "first": "Image!2ko2px8",
+    "second": {
+      "first": "3D!18i6zy7",
+      "second": "3D!2unqe1x",
+      "direction": "column"
+    },
+    "splitPercentage": 60.3585657370518
+  }
+}
