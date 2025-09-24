@@ -58,229 +58,129 @@
         }
       }
     },
-    "3D!18i6zy7": {
-      "layers": {
-        "845139cb-26bc-40b3-8161-8ab60af4baf5": {
-          "visible": true,
-          "frameLocked": true,
-          "label": "Grid",
-          "instanceId": "845139cb-26bc-40b3-8161-8ab60af4baf5",
-          "layerId": "foxglove.Grid",
-          "size": 10,
-          "divisions": 10,
-          "lineWidth": 1,
-          "color": "#248eff",
-          "position": [
-            0,
-            0,
-            0
-          ],
-          "rotation": [
-            0,
-            0,
-            0
-          ],
-          "order": 1
-        },
-        "30e5fcb1-b77d-4103-b8d3-e00c372ccff8": {
-          "displayMode": "auto",
-          "fallbackColor": "#dadada",
-          "showAxis": false,
-          "axisScale": 1,
-          "visible": true,
-          "frameLocked": true,
-          "instanceId": "30e5fcb1-b77d-4103-b8d3-e00c372ccff8",
-          "label": "URDF",
-          "layerId": "foxglove.Urdf",
-          "sourceType": "topic",
-          "url": "",
-          "filePath": "",
-          "parameter": "",
-          "topic": "/left_hand/robot_description",
-          "framePrefix": "left_hand/",
-          "order": 2,
-          "showOutlines": false
+    "Indicator!3bvf644": {
+      "path": "/game_status.game_status",
+      "style": "background",
+      "fontSize": 24,
+      "fallbackColor": "#59f1ff",
+      "fallbackLabel": "Giving \"scissors\" pose to start the new round",
+      "rules": [
+        {
+          "operator": "=",
+          "rawValue": "PLAYING",
+          "color": "#59f1ff",
+          "label": "Playing..."
         }
-      },
-      "cameraState": {
-        "perspective": true,
-        "distance": 0.7129586450102557,
-        "phi": 76.18185448597964,
-        "thetaOffset": -124.78483263211076,
-        "targetOffset": [
-          -0.22488334847227318,
-          -0.15789424049996142,
-          9.87305732212896e-18
-        ],
-        "target": [
-          0,
-          0,
-          0
-        ],
-        "targetOrientation": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "fovy": 45,
-        "near": 0.1,
-        "far": 5000
-      },
-      "followMode": "follow-none",
-      "followTf": "left_hand/base",
-      "scene": {
-        "meshUpAxis": "z_up",
-        "backgroundColor": "#3d3d3d",
-        "transforms": {
-          "visible": false
+      ]
+    },
+    "Indicator!1h0126u": {
+      "path": "/game_status.result",
+      "style": "background",
+      "fontSize": 30,
+      "fallbackColor": "#8d8d8d",
+      "fallbackLabel": "RESULT: -",
+      "rules": [
+        {
+          "operator": "=",
+          "rawValue": "ok",
+          "color": "#1cd01c",
+          "label": "RESULT: DRAW !!"
+        },
+        {
+          "operator": "=",
+          "rawValue": "victory",
+          "color": "#e8ea9c",
+          "label": "RESULT: YOU LOSE !!!"
+        },
+        {
+          "operator": "=",
+          "rawValue": "thumbs_up",
+          "color": "#3853a6",
+          "label": "RESULT: YOU WIN !!!"
+        },
+        {
+          "operator": "=",
+          "rawValue": "TIMEOUT",
+          "color": "#d61340",
+          "label": "TIMEOUT"
         }
-      },
-      "transforms": {
-        "frame:camera": {
-          "visible": false
+      ]
+    },
+    "Indicator!4aao4q8": {
+      "path": "/game_status.user_detect",
+      "style": "background",
+      "fontSize": 18,
+      "fallbackColor": "#8d8d8d",
+      "fallbackLabel": "User choice: -",
+      "rules": [
+        {
+          "operator": "=",
+          "rawValue": "scissor",
+          "color": "#8d8d8d",
+          "label": "User choice: scissors"
         },
-        "frame:right_hand/hand_base_link": {
-          "visible": false
+        {
+          "operator": "=",
+          "rawValue": "rock",
+          "color": "#8d8d8d",
+          "label": "User choice: rock"
         },
-        "frame:right_hand/index_proximal": {
-          "visible": false
+        {
+          "operator": "=",
+          "rawValue": "paper",
+          "color": "#8d8d8d",
+          "label": "User choice: paper"
         },
-        "frame:right_hand/index_intermediate": {
-          "visible": false
-        },
-        "frame:right_hand/middle_proximal": {
-          "visible": false
-        },
-        "frame:right_hand/middle_intermediate": {
-          "visible": false
-        },
-        "frame:right_hand/pinky_proximal": {
-          "visible": false
-        },
-        "frame:right_hand/pinky_intermediate": {
-          "visible": false
-        },
-        "frame:right_hand/ring_proximal": {
-          "visible": false
-        },
-        "frame:right_hand/ring_intermediate": {
-          "visible": false
-        },
-        "frame:right_hand/thumb_proximal_base": {
-          "visible": false
-        },
-        "frame:right_hand/thumb_proximal": {
-          "visible": false
-        },
-        "frame:right_hand/thumb_intermediate": {
-          "visible": false
-        },
-        "frame:right_hand/thumb_distal": {
-          "visible": false
-        },
-        "frame:left_hand/hand_base_link": {
-          "visible": false
-        },
-        "frame:left_hand/index_proximal": {
-          "visible": false
-        },
-        "frame:left_hand/index_intermediate": {
-          "visible": false
-        },
-        "frame:left_hand/middle_proximal": {
-          "visible": false
-        },
-        "frame:left_hand/middle_intermediate": {
-          "visible": false
-        },
-        "frame:left_hand/pinky_proximal": {
-          "visible": false
-        },
-        "frame:left_hand/pinky_intermediate": {
-          "visible": false
-        },
-        "frame:left_hand/ring_proximal": {
-          "visible": false
-        },
-        "frame:left_hand/ring_intermediate": {
-          "visible": false
-        },
-        "frame:left_hand/thumb_proximal_base": {
-          "visible": false
-        },
-        "frame:left_hand/thumb_proximal": {
-          "visible": false
-        },
-        "frame:left_hand/thumb_intermediate": {
-          "visible": false
-        },
-        "frame:left_hand/thumb_distal": {
-          "visible": false
-        },
-        "frame:right_hand/base": {
-          "visible": false
-        },
-        "frame:right_hand/index_tip": {
-          "visible": false
-        },
-        "frame:right_hand/middle_tip": {
-          "visible": false
-        },
-        "frame:right_hand/pinky_tip": {
-          "visible": false
-        },
-        "frame:right_hand/ring_tip": {
-          "visible": false
-        },
-        "frame:right_hand/thumb_tip": {
-          "visible": false
-        },
-        "frame:left_hand/base": {
-          "visible": false
-        },
-        "frame:left_hand/index_tip": {
-          "visible": false
-        },
-        "frame:left_hand/middle_tip": {
-          "visible": false
-        },
-        "frame:left_hand/pinky_tip": {
-          "visible": false
-        },
-        "frame:left_hand/ring_tip": {
-          "visible": false
-        },
-        "frame:left_hand/thumb_tip": {
-          "visible": false
+        {
+          "operator": "=",
+          "rawValue": "unknown",
+          "color": "#8d8d8d",
+          "label": "User choice: unknown"
         }
-      },
-      "topics": {},
-      "publish": {
-        "type": "point",
-        "poseTopic": "/move_base_simple/goal",
-        "pointTopic": "/clicked_point",
-        "poseEstimateTopic": "/initialpose",
-        "poseEstimateXDeviation": 0.5,
-        "poseEstimateYDeviation": 0.5,
-        "poseEstimateThetaDeviation": 0.26179939
-      },
-      "imageMode": {}
+      ]
+    },
+    "Indicator!24c0hx2": {
+      "path": "/game_status.computer_detect",
+      "style": "background",
+      "fontSize": 18,
+      "fallbackColor": "#8d8d8d",
+      "fallbackLabel": "Computer choice: -",
+      "rules": [
+        {
+          "operator": "=",
+          "rawValue": "scissor",
+          "color": "#8d8d8d",
+          "label": "Computer choice: scissors"
+        },
+        {
+          "operator": "=",
+          "rawValue": "paper",
+          "color": "#8d8d8d",
+          "label": "Computer choice: paper"
+        },
+        {
+          "operator": "=",
+          "rawValue": "rock",
+          "color": "#8d8d8d",
+          "label": "Computer choice: rock"
+        }
+      ]
     },
     "3D!2unqe1x": {
       "cameraState": {
-        "distance": 0.6434451771223559,
         "perspective": true,
-        "phi": 69.44042171219552,
+        "distance": 0.6434451771223556,
+        "phi": 69.44042171219554,
+        "thetaOffset": -75.02527551177708,
+        "targetOffset": [
+          -0.270441569968132,
+          0.07308679973879784,
+          4.887096757932364e-19
+        ],
         "target": [
           0,
           0,
           0
-        ],
-        "targetOffset": [
-          -0.27094993845734305,
-          0.07396642342737975,
-          5.2858848569229365e-19
         ],
         "targetOrientation": [
           0,
@@ -288,7 +188,6 @@
           0,
           1
         ],
-        "thetaOffset": -75.02527551177705,
         "fovy": 45,
         "near": 0.1,
         "far": 5000
@@ -482,13 +381,27 @@
     "speed": 1
   },
   "layout": {
-    "direction": "row",
     "first": "Image!2ko2px8",
     "second": {
-      "first": "3D!18i6zy7",
+      "first": {
+        "first": "Indicator!3bvf644",
+        "second": {
+          "first": "Indicator!1h0126u",
+          "second": {
+            "first": "Indicator!4aao4q8",
+            "second": "Indicator!24c0hx2",
+            "direction": "column"
+          },
+          "direction": "row"
+        },
+        "direction": "column",
+        "splitPercentage": 30.025445292620855
+      },
       "second": "3D!2unqe1x",
-      "direction": "column"
+      "direction": "column",
+      "splitPercentage": 27.087033747779753
     },
-    "splitPercentage": 60.3585657370518
+    "direction": "row",
+    "splitPercentage": 55.2801724137931
   }
 }

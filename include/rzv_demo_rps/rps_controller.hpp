@@ -32,6 +32,7 @@
 
 // Include the generated action
 #include "arm_hand_control/action/execute_gesture.hpp"
+#include "rzv_demo_rps/msg/game_status.hpp"
 
 enum class GameState
 {
@@ -67,13 +68,11 @@ private:
   rclcpp_action::Client<ExecuteGesture>::SharedPtr client_ptr_;
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr hand_pose_trigger_sub_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr user_hand_pose_pub_;
+  rclcpp::Publisher<rzv_demo_rps::msg::GameStatus>::SharedPtr game_info_pub_;
 
   // Timers
   rclcpp::TimerBase::SharedPtr gameplay_timer_;  // control state machine game
   rclcpp::TimerBase::SharedPtr timer_;
-
-  rclcpp::TimerBase::SharedPtr delay_timer_;
-  rclcpp::TimerBase::SharedPtr demo_timer_;
 
   // Rock, Paper, Scissors state machine methods
   std::vector<std::string> signal_start_game();
@@ -94,7 +93,9 @@ private:
 
   //===== Helper function to control state machine =====
   void set_state(GameState state);
-
+  void publish_status(
+    const std::string & game_status, const std::string & user_detect,
+    const std::string & computer_detect, const std::string & result);
   GameState state_;
   size_t check_count_;
   bool goal_active_;

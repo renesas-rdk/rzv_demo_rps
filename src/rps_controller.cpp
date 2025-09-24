@@ -34,6 +34,26 @@ RPSGameController::RPSGameController() : Node("rps_game_controller"), state_(Gam
     "hand_pose", qos, std::bind(&RPSGameController::trigger_game_start, this, _1));
 
   client_ptr_ = rclcpp_action::create_client<ExecuteGesture>(this, "execute_gesture");
+
+  game_info_pub_ = this->create_publisher<rzv_demo_rps::msg::GameStatus>("game_status", 10);
+
+  // Publish initial status
+  publish_status("Ready", "-", "-", "-");
+}
+
+// Publish game status
+void RPSGameController::publish_status(
+  const std::string & game_status, const std::string & user_detect,
+  const std::string & computer_detect, const std::string & result)
+{
+  RCLCPP_INFO(this->get_logger(), "Publish status");
+  auto msg = rzv_demo_rps::msg::GameStatus();
+  msg.game_status = game_status;
+  msg.user_detect = user_detect;
+  msg.computer_detect = computer_detect;
+  msg.result = result;
+
+  game_info_pub_->publish(msg);
 }
 
 // ===== RPS STATE =====
@@ -67,6 +87,7 @@ void RPSGameController::trigger_game_start(const std_msgs::msg::String::SharedPt
       // Switch state machine to START
       RCLCPP_INFO(this->get_logger(), "Game started");
       set_state(GameState::START);
+      publish_status("PLAYING", "-", "-", "-");
       game_started_ = true;
       gestures_.clear();
     }
@@ -156,6 +177,7 @@ void RPSGameController::handle_wait_state()
     user_choice_.data = "unknown";
     result_game_ = "unknown";
     set_state(GameState::RESULT);
+    publish_status("PLAYING", user_choice_.data, computer_choice_, "TIMEOUT");
     return;
   }
 
@@ -179,6 +201,7 @@ void RPSGameController::handle_wait_state()
     result_game_ = determine_winner(user_choice_.data, computer_choice_);
     RCLCPP_INFO(this->get_logger(), "Game result: %s", result_game_.c_str());
     set_state(GameState::RESULT);
+    publish_status("PLAYING", user_choice_.data, computer_choice_, result_game_);
   }
 }
 
@@ -255,11 +278,12 @@ void RPSGameController::process_gameplay_state()
       handle_result_state();
       break;
     case GameState::READY:
-      gameplay_timer_->cancel(); // Stop timer safely
+      gameplay_timer_->cancel();  // Stop timer safely
       game_started_ = false;
 
-      rclcpp::sleep_for(std::chrono::seconds(2));
-      RCLCPP_INFO(this->get_logger(), "Game reset after 2 seconds");
+      rclcpp::sleep_for(std::chrono::seconds(3));  // wait for a while before resetting the game
+      publish_status("READY", "-", "-", "-");
+      RCLCPP_INFO(this->get_logger(), "Game reset after 3 seconds");
       break;
     default:
       RCLCPP_ERROR(get_logger(), "Invalid game state!");

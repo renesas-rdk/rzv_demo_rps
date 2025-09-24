@@ -15,6 +15,11 @@ find_package(std_msgs REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(arm_hand_control REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/GameStatus.msg"
+)
 
 # Include directories
 include_directories(include)
@@ -30,6 +35,7 @@ ament_target_dependencies(rps_controller
   arm_hand_control
   ament_index_cpp
 )
+rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
 target_link_libraries(rps_controller
   "${cpp_typesupport_target}"
 )
