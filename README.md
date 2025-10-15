@@ -1,93 +1,278 @@
-# RZV Demo RPS
+# RZ/V Demo Rock-Paper-Scissor (RPS)
+
+This ROS 2 package enables hand using rock-paper-scissors gesture recognition. It captures hand gestures through a vision-based recognition system and translates them into control commands to interact with games. Beside that, also providing launch files and configurations for demonstrating Rock-Paper-Scissor on Renesas RZ/V platforms.
+## Overview
+
+This package provides node for controlling robotic hands. It supports:
+- Rock-Paper-Scissors Controller: Detects rock–paper–scissors gestures in real time, executes the game logic, and sends commands to control the robotic hand accordingly.
+- Compatible with the Inspire RH56 Dexhand and Ruiyan RH2 robotic hands.
+
+The RZ/V Demo Rock-Paper-Scissor package enables:
+- Hand RPS estimation and interpretation
+- Simultaneous control of virtual and physical dexterous hands
+- Visualization through Foxglove Studio
+
+## RPS game play
+  1. Similar to the traditional game.
+  2. The user initiates a game by showing the "HI" pose (scissors gesture) in front of the camera.
+  3. The robotic hand performs a 1-2-3 countdown to signal the start of the round.
+  4. When the countdown is finished, the player must show their chosen gesture (rock, paper, or scissors) within 2 seconds. If no gesture is detected in this time, the game is aborted.
+  5. In case players give the choice, the robotic hand randomly selects and displays rock, paper, or scissors.
+  6. After that, the game result is displayed by the robotic hand using the following gestures: `OK` – Draw, `Thumbs Down` – You lose, `Victory` – You win.
+  6. Wait 2 seconds after the result is shown to start a new game.
+
+## Nodes
+
+### Rock-Paper-Scissor Controller (`rps_controller_node`)
+
+Subscribes to string-based RPS pose topics, processes them through the game logic, and sends commands to control the robotic hand.
+- **Subscriptions**:
+  - `hand_pose` (std_msgs/String) - Receives RPS poses: `"rock"`, `"scissor"`, `"paper"`.
+- **Action client**:
+  - `execute_gesture` (arm_hand_control/action/ExecuteGesture) - Sends a goal containing gesture_name to command the robotic hand to perform the corresponding pose for interacting with the player.
+
+## Package Dependencies
+
+### Vision and Perception
+- `rzv_pose_estimation`: Provides rps pose estimation capabilities on Renesas RZ/V platforms
+- `v4l2_camera`: Camera interface for video capture
+- `foxglove_keypoint_publisher`: Publishes keypoints for visualization
+
+### Hand Control and Visualization
+- `arm_hand_control`: Receive goal to control the dexterous hand for interacting with player
+- `inspire_rh56_urdf`: URDF models for the Inspire RH56 dexterous hand
+- `robot_state_publisher`: Publishes TF information based on joint states
+- `tf2_ros`: Transform library for coordinate frames
+
+### Visualization Bridge
+- `foxglove_bridge`: Bridges ROS 2 to Foxglove Studio for visualization
+
+## Prerequisites
+### Hardware Requirements:
+- [RZV2H-EVK Board](https://www.renesas.com/en/design-resources/boards-kits/rz-v2h-evk) - Renesas RZ/V platform
+- USB camera for hand tracking
+- Physical hand (hardware simulation is supported):
+  - Ruiyan RH2 DexHand connected via can port
+  - Inspire RH56 DexHand connected via serial port
+- Network access (Ethernet)
+- USB serial (optional for debugging)
+- SD Card (using eSD boot) at least 16GB recommended
+### Software requirements:
+- A host machine running:
+    - `Docker` – used for isolated and repeatable builds
+    - `Git` – to clone repositories
+    - `SSH` – for remote interaction and deployment to the target board
+- Cross-Compiling scripts: A complete guide and supporting scripts for **Cross-Compiling ROS2 Projects for RZ/V2H Using Yocto SDK and Docker**.
+- Prebuilt Yocto SDK for RZ/V2H with ROS 2 packages:
+    - The prebuilt SDK (.sh installer) includes all the required ROS 2 packages for the Jazzy distribution, ready for cross-compilation.
+    - `poky-glibc-*.target.manifest`: A list of available target-side packages installed in the target root filesystem.
+- Ubuntu-based Root Filesystem Image
+- ROS 2 workspace source code:
+  ```bash
+  arm_hand_control
+  foxglove_keypoint_publisher
+  rzv_demo_rps
+  rzv_model
+  rzv_pose_estimation
+
+  # For Inspire RH56 Dexhand demo
+  inspire_rh56_urdf
+  inspire_rh56_dexhand
+
+  # For Ruiyan RH2 Dexhand Demo
+  ruiyan_rh2_controller
+  ruiyan_rh2_urdf
+  ruiyan_rh2_dexhand
+  ```
+
+**Note:**
+> If you intend to run only the Inspire RH56 DexHand demo, you only need to focus on the `inspire_rh56_urdf` and `inspire_rh56_dexhand` folders,
+> and ignore the `ruiyan_rh2_controller`, `ruiyan_rh2_urdf`, and `ruiyan_rh2_dexhand` folders.
+> Conversely, if you intend to run only the RuiYan RH2 DexHand demo, focus on the RuiYan RH2 folders and ignore the Inspire RH56 ones.
+>
+> On the provided pure Ubuntu image for the RZ/V2H board, `ros-jazzy-ros-base` is already installed, so step `1. ROS 2 Jazzy Installation` can be skipped.
+>
+> Additionally, the demo packages were built during the cross-compilation process. Please refer to the `cross-build documentation` for instructions on how to compile them.
+
+### 1. ROS 2 Jazzy Installation
+Before installing the package dependencies, ensure you have ROS 2 Jazzy installed on your Ubuntu system:
+
+```bash
+# Update package index and install ROS 2 Jazzy base
+sudo apt update
+sudo apt install ros-jazzy-ros-base
+```
+For detailed installation instructions, follow the [official ROS2 Jazzy installation guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html).
+
+### 2. Demo Packages and Dependencies Installation
+
+- Deploy the `install/` directory (from cross-compilation) to the board, typically under `/home/rz/ros2_ws/install`
+
+- Use `rosdep` to install all required dependencies:
+  ```bash
+  # Initialize and update rosdep (only required once per system)
+  sudo rosdep init
+  rosdep update
+
+  #Install dependencies for the following common packages
+  rosdep install --from-paths /path/to/install/*/share -y -r --ignore-src
+  ```
+
+### 3. Load the workspace
+You must source the setup script to make the packages visible to ROS:
+```bash
+# Source ROS2 in the current shell
+source /opt/ros/jazzy/setup.bash
+
+source <your_ros2_ws>/install/setup.bash
+```
+
+## Run the Rock-Paper-Scissor demo
+### Connect and setup hardware
+Connect both the USB camera and the physical DexHand to the USB ports on the board.
+
+Based on the hardware currently in use: **Inspire RH56** or **Ruiyan RH2**, please run the following script to load the required kernel module or initialize hardware communication:
+
+- **Inspire RH56**:
+  `install/rzv_demo_dexhand/share/rzv_demo_dexhand/setup/inspire_rh56_init.sh`
+
+- **Ruiyan RH2**:
+  `install/rzv_demo_dexhand/share/rzv_demo_dexhand/setup/ruiyan_rh2_init.sh`
+
+You only need to run this script once when you connect the hardware to the board.
+
+If you are using different hardware, please create your own setup script accordingly.
+
+### Run the Demo
+
+To launch the virtual hands demo (without requiring hand hardware):
+
+```bash
+ros2 launch rzv_demo_rps demo_virtual_hand_rps.launch.py
+```
+
+To launch the physical Inspire RH56 hand control demo:
+
+```bash
+ros2 launch rzv_demo_rps demo_physical_inspire_rh56_hand_rps.launch.py video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
+```
+
+To launch the physical RuiYan RH2 hand control demo:
+
+```bash
+ros2 launch rzv_demo_rps demo_physical_ruiyan_rh2_hand_rps.launch.py video_device:=/dev/video0 can_port:=can2
+```
+
+### Launch Arguments
+- `video_device`: Specify the camera device (default: `/dev/video0`)
+- `serial_port`: Serial port for the physical Inspire RH56 DexHand (default: `/dev/ttyUSB0`, only for `demo_physical_hand.launch.py`)
+- `can_port`: Can port for the physical RuiYan RH2 DexHand (default: `can2`, only for `demo_physical_ruiyan_rh2_hand.launch.py`)
 
 
+## Launch Files
 
-## Getting started
+#### demo_virtual_hands.launch.py
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+This launch file sets up a camera-based hand tracking system that controls virtual RuiYan RH2 hands:
 
 ```
-cd existing_repo
-git remote add origin https://partnergitlab.renesas.solutions/sst1/industrial/ws078/rzv_ros_package/rzv-demo-rps.git
-git branch -M main
-git push -uf origin main
+PIPELINE:
+camera → hand rps estimation  → rps controller → hand gesture interpreters → urdf visualization
+
+Topic flow:
+- Camera: publishes /image_raw
+- Hand rps estimation: subscribes to /image_raw
+  publishes /hand_rps_estimation/bounding_box, /hand_rps_estimation/hand_rps
+- Visualization: subscribes to /hand_rps_estimation/bounding_box and publishes visualization markers
+- RPS Controller: subscribes to /hand_rps_estimation/hand_rps
+  sends action goal to: /execute_gesture/goal
+- Hand gesture interpreter:  receives action goal from: /execute_gesture/goal
+  publishes /joint_states (alternative control method)
+- URDF publishers: subscribe to /joint_states for hand visualization
 ```
 
-## Integrate with your tools
+Components included in this launch file:
+1. **Camera Node**: Captures video input for hand tracking
+2. **Hand RPS Estimation**: Detects rock–paper–scissors hand poses
+3. **Visualization Nodes**: Create visual representations for Foxglove Studio
+4. **RPS Controller Node**: Converts detected hand poses to logic game
+5. **Hand Gesture Interpreter**: Provides control through gesture commands.
+6. **URDF State Publishers**: Visualize both right and left hands
+7. **Foxglove Bridge**: Enables visualization through Foxglove Studio
 
-- [ ] [Set up project integrations](https://partnergitlab.renesas.solutions/sst1/industrial/ws078/rzv_ros_package/rzv-demo-rps/-/settings/integrations)
+#### demo_physical_inspire_rh56_hand_rps.launch.py
 
-## Collaborate with your team
+This launch file extends the virtual hand demo to also control a physical Inspire RH56 dexterous hand:
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+```
+PIPELINE:
+camera → hand rps estimation  → rps controller → hand gesture interpreters → urdf visualization + real hand control
 
-## Test and Deploy
+Topic flow:
+- Camera: publishes /image_raw
+- Hand rps estimation: subscribes to /image_raw
+  publishes /hand_rps_estimation/bounding_box, /hand_rps_estimation/hand_rps
+- Visualization: subscribes to /hand_rps_estimation/bounding_box and publishes visualization markers
+- RPS Controller: subscribes to /hand_rps_estimation/hand_rps
+  sends action goal to: /execute_gesture/goal
+- Hand gesture interpreter:  receives action goal from: /execute_gesture/goal
+  publishes /joint_states (alternative control method)
+- URDF publishers: subscribe to /joint_states for hand visualization
+- Physical hand controller: subscribes to /joint_states to control the real DexHand
+```
 
-Use the built-in continuous integration in GitLab.
+Components included in this launch file:
+1. **Camera Node**: Captures video input for hand tracking
+2. **Hand RPS Estimation**: Detects rock–paper–scissors hand poses
+3. **Visualization Nodes**: Create visual representations for Foxglove Studio
+4. **RPS Controller Node**: Converts detected hand poses to logic game
+5. **Hand Gesture Interpreter**: Provides control through gesture commands.
+6. **URDF State Publishers**: Visualize both right and left hands
+7. **Real Hand Control**: Controls physical Inspire RH56 DexHand via serial connection
+8. **Foxglove Bridge**: Enables visualization through Foxglove Studio
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+#### demo_physical_ruiyan_rh2_hand_rps.launch.py
 
-***
+This launch file extends the virtual hand demo to also control a physical RuiYan RH2 dexterous hand:
+```
+Pipeline:
+camera → hand rps estimation  → rps controller → hand gesture interpreters → urdf visualization + real hand control
 
-# Editing this README
+Topic flow:
+- Camera: publishes /image_raw
+- Hand rps estimation: subscribes to /image_raw
+  publishes /hand_rps_estimation/bounding_box, /hand_rps_estimation/hand_rps
+- Visualization: subscribes to /hand_rps_estimation/bounding_box and publishes visualization markers
+- RPS Controller: subscribes to /hand_rps_estimation/hand_rps
+  sends action goal to: /execute_gesture/goal
+- Hand gesture interpreter:  receives action goal from: /execute_gesture/goal
+  publishes /joint_states (alternative control method)
+- URDF publishers: subscribe to /joint_states for hand visualization
+- Ryuyan RH2 DexHand: Perform message conversion: subscribes to /joint_states, publishes /ryhand6_cmd
+- Physical hand controller: subscribes to /ryhand6_cmd to control the real DexHand
+```
+## Visualization with Foxglove Studio
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+The demo can be visualized using Foxglove Studio by connecting to the Foxglove Bridge websocket.
 
-## Suggestions for a good README
+#### Using the Preset Layout
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+For the best visualization experience, a preset panel layout is provided:
 
-## Name
-Choose a self-explaining name for your project.
+1. Start Foxglove Studio
+2. Connect to the Foxglove Bridge websocket (typically `ws://localhost:8765`)
+3. Click on "Layouts" in the top menu
+4. Select "Import layout from file"
+5. Navigate to the `config/foxglove/demo_rps.json` file in the rzv_demo_rps package
+6. Click "Open" to load the preset layout
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+The preset layout provides:
+- Camera view with hand landmark overlays
+- 3D visualization of the virtual hands
+- Joint state monitoring panels
+- Custom panels configured specifically for the dexterous hand demo
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+This layout ensures all the necessary visualization components are properly set up without manual configuration.
 
 ## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Apache License 2.0
