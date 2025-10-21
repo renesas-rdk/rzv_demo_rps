@@ -23,7 +23,7 @@
   <depend>ament_index_cpp</depend>
 
   <!-- Vision and perception -->
-  <exec_depend>rzv_pose_estimation</exec_depend>
+  <exec_depend>rzv_object_detection</exec_depend>
   <exec_depend>v4l2_camera</exec_depend>
   <exec_depend>foxglove_keypoint_publisher</exec_depend>
 
