@@ -30,14 +30,14 @@ def generate_launch_description():
     Launch camera-based hand tracking with virtual hand control.
 
     Pipeline:
-    camera → hand rps estimation  → rps game controller → hand gesture interpreters → urdf visualization + real hand control
+    camera → object detection  → rps game controller → hand gesture interpreters → urdf visualization + real hand control
 
     Topic flow:
     - Camera: publishes /image_raw
-    - Hand rps estimation: subscribes to /image_raw
-      publishes /hand_rps_estimation/bounding_box, /hand_rps_estimation/hand_rps
-    - Visualization: subscribes to /hand_rps_estimation/bounding_box and publishes visualization markers
-    - RPS Game Controller: subscribes to /hand_rps_estimation/hand_rps
+    - Object detection: subscribes to /image_raw
+      publishes /object_detection/bounding_box, /object_detection/rps_hand_detect
+    - Visualization: subscribes to /object_detection/bounding_box and publishes visualization markers
+    - RPS Game Controller: subscribes to /object_detection/rps_hand_detect
       sends action goal to: /execute_gesture/goal
     - Hand gesture interpreter:  receives action goal from: /execute_gesture/goal
       publishes /joint_states (alternative control method)
@@ -78,22 +78,23 @@ def generate_launch_description():
         }]
     )
 
-    # 2. Hand rps estimation node
+    # 2. Object detection node
     # SUBSCRIBES: /image_raw
-    # PUBLISHES: /hand_rps_estimation/bounding_box, /hand_rps_estimation/hand_rps
-    hand_rps_estimation_node = Node(
-        package='rzv_pose_estimation',
-        executable='hand_rps_estimation',
-        name='hand_rps_estimation',
+    # PUBLISHES: /object_detection/bounding_box, /object_detection/rps_hand_detect
+    object_detection_node = Node(
+        package='rzv_object_detection',
+        executable='yolov8_object_detection',
+        name='object_detection',
         parameters=[{
+            'model_type': 'yolov8_rps',
+            'processing_queue_size': 1,
             'confidence_threshold': 0.8,
-            'bbox_expansion_scale': 1.5,  # W/A since the hand detection model is not perfect
-            'bbox_size_threshold': 32,
+            'iou_threshold': 0.3,
         }],
         remappings=[
             ('/image_raw', '/image_raw'),
-            ('/bounding_box', '/hand_rps_estimation/bounding_box'),
-            ('/hand_rps', '/hand_rps_estimation/hand_rps')
+            ('/bounding_box', '/object_detection/bounding_box'),
+            ('/rps_hand_detect', '/object_detection/rps_hand_detect')
         ],
         output='screen',
         arguments=['--ros-args', '--log-level', 'INFO']
@@ -101,8 +102,8 @@ def generate_launch_description():
 
     # 3. Visualization nodes for Foxglove Studio
     # 3.1 Bounding box visualization
-    # SUBSCRIBES: /hand_rps_estimation/bounding_box
-    # PUBLISHES: /hand_rps_estimation/bbox_visualization
+    # SUBSCRIBES: /object_detection/bounding_box
+    # PUBLISHES: bbox_visualization
     bbox_config_path = os.path.join(foxglove_keypoint_pkg_dir, 'config/poses/bounding_box.yaml')
     foxglove_hand_bbox_publisher_node = Node(
         package='foxglove_keypoint_publisher',
@@ -110,7 +111,7 @@ def generate_launch_description():
         name='foxglove_hand_bbox_publisher',
         parameters=[{'config_file': bbox_config_path}],
         remappings=[
-            ('/keypoint_poses', '/hand_rps_estimation/bounding_box'),
+            ('/keypoint_poses', '/object_detection/bounding_box'),
             ('/keypoint_visualization', '/bbox_visualization')
         ],
         output='screen'
@@ -119,7 +120,7 @@ def generate_launch_description():
     # 4. Interpreter for controlling hands
 
     # 4.1 Rock-Paper-Scissors game controller
-    # SUBSCRIBES TO: /hand_rps_estimation/hand_rps
+    # SUBSCRIBES TO: /object_detection/rps_hand_detect
     # ACTION CLIENT: /execute_gesture/goal
     hand_config_path = os.path.join(ruiyan_rh2_pkg_dir, 'config/hand/ruiyan2.yaml')
     rps_controller_node = Node(
@@ -128,7 +129,7 @@ def generate_launch_description():
         name='rps_controller',
         output='screen',
         remappings=[
-            ('/hand_pose', '/hand_rps_estimation/hand_rps')
+            ('/hand_pose', '/object_detection/rps_hand_detect')
         ]
     )
 
@@ -240,7 +241,7 @@ def generate_launch_description():
 
         # 3. Pipeline nodes - in processing order
         camera_node,                          # Image source
-        hand_rps_estimation_node,            # Hand RPS pose detection
+        object_detection_node,            # Hand RPS pose detection
 
         # 4. Visualization nodes
         foxglove_hand_bbox_publisher_node,    # Bounding box visualization

@@ -8,7 +8,7 @@ This package provides node for controlling robotic hands. It supports:
 - Compatible with the Inspire RH56 Dexhand and Ruiyan RH2 robotic hands.
 
 The RZ/V Demo Rock-Paper-Scissor package enables:
-- Hand RPS estimation and interpretation
+- RPS Object detection and interpretation
 - Simultaneous control of virtual and physical dexterous hands
 - Visualization through Foxglove Studio
 
@@ -34,7 +34,7 @@ Subscribes to string-based RPS pose topics, processes them through the game logi
 ## Package Dependencies
 
 ### Vision and Perception
-- `rzv_pose_estimation`: Provides rps pose estimation capabilities on Renesas RZ/V platforms
+- `rzv_object_detection`: Provides rps pose detection capabilities on Renesas RZ/V platforms
 - `v4l2_camera`: Camera interface for video capture
 - `foxglove_keypoint_publisher`: Publishes keypoints for visualization
 
@@ -73,7 +73,7 @@ Subscribes to string-based RPS pose topics, processes them through the game logi
   foxglove_keypoint_publisher
   rzv_demo_rps
   rzv_model
-  rzv_pose_estimation
+  rzv_object_detection
 
   # For Inspire RH56 Dexhand demo
   inspire_rh56_urdf
@@ -177,14 +177,14 @@ This launch file sets up a camera-based hand tracking system that controls virtu
 
 ```
 PIPELINE:
-camera → hand rps estimation  → rps controller → hand gesture interpreters → urdf visualization
+camera → object detection  → rps controller → hand gesture interpreters → urdf visualization
 
 Topic flow:
 - Camera: publishes /image_raw
-- Hand rps estimation: subscribes to /image_raw
-  publishes /hand_rps_estimation/bounding_box, /hand_rps_estimation/hand_rps
-- Visualization: subscribes to /hand_rps_estimation/bounding_box and publishes visualization markers
-- RPS Controller: subscribes to /hand_rps_estimation/hand_rps
+- Object detection: subscribes to /image_raw
+  publishes /object_detection_node/bounding_box, /object_detection_node/rps_hand_detect
+- Visualization: subscribes to /object_detection_node/bounding_box and publishes visualization markers
+- RPS Controller: subscribes to /object_detection_node/rps_hand_detect
   sends action goal to: /execute_gesture/goal
 - Hand gesture interpreter:  receives action goal from: /execute_gesture/goal
   publishes /joint_states (alternative control method)
@@ -193,7 +193,7 @@ Topic flow:
 
 Components included in this launch file:
 1. **Camera Node**: Captures video input for hand tracking
-2. **Hand RPS Estimation**: Detects rock–paper–scissors hand poses
+2. **Object Detection Node**: Detects rock–paper–scissors hand poses
 3. **Visualization Nodes**: Create visual representations for Foxglove Studio
 4. **RPS Controller Node**: Converts detected hand poses to logic game
 5. **Hand Gesture Interpreter**: Provides control through gesture commands.
@@ -206,14 +206,14 @@ This launch file extends the virtual hand demo to also control a physical Inspir
 
 ```
 PIPELINE:
-camera → hand rps estimation  → rps controller → hand gesture interpreters → urdf visualization + real hand control
+camera → object detection  → rps controller → hand gesture interpreters → urdf visualization + real hand control
 
 Topic flow:
 - Camera: publishes /image_raw
-- Hand rps estimation: subscribes to /image_raw
-  publishes /hand_rps_estimation/bounding_box, /hand_rps_estimation/hand_rps
-- Visualization: subscribes to /hand_rps_estimation/bounding_box and publishes visualization markers
-- RPS Controller: subscribes to /hand_rps_estimation/hand_rps
+- Object detection: subscribes to /image_raw
+  publishes /object_detection_node/bounding_box, /object_detection_node/rps_hand_detect
+- Visualization: subscribes to /object_detection_node/bounding_box and publishes visualization markers
+- RPS Controller: subscribes to /object_detection_node/rps_hand_detect
   sends action goal to: /execute_gesture/goal
 - Hand gesture interpreter:  receives action goal from: /execute_gesture/goal
   publishes /joint_states (alternative control method)
@@ -223,7 +223,7 @@ Topic flow:
 
 Components included in this launch file:
 1. **Camera Node**: Captures video input for hand tracking
-2. **Hand RPS Estimation**: Detects rock–paper–scissors hand poses
+2. **Object Detecction Node**: Detects rock–paper–scissors hand poses
 3. **Visualization Nodes**: Create visual representations for Foxglove Studio
 4. **RPS Controller Node**: Converts detected hand poses to logic game
 5. **Hand Gesture Interpreter**: Provides control through gesture commands.
@@ -236,14 +236,14 @@ Components included in this launch file:
 This launch file extends the virtual hand demo to also control a physical RuiYan RH2 dexterous hand:
 ```
 Pipeline:
-camera → hand rps estimation  → rps controller → hand gesture interpreters → urdf visualization + real hand control
+camera → object detection  → rps controller → hand gesture interpreters → urdf visualization + real hand control
 
 Topic flow:
 - Camera: publishes /image_raw
-- Hand rps estimation: subscribes to /image_raw
-  publishes /hand_rps_estimation/bounding_box, /hand_rps_estimation/hand_rps
-- Visualization: subscribes to /hand_rps_estimation/bounding_box and publishes visualization markers
-- RPS Controller: subscribes to /hand_rps_estimation/hand_rps
+- Object detection: subscribes to /image_raw
+  publishes /object_detection_node/bounding_box, /object_detection_node/rps_hand_detect
+- Visualization: subscribes to /object_detection_node/bounding_box and publishes visualization markers
+- RPS Controller: subscribes to /object_detection_node/rps_hand_detect
   sends action goal to: /execute_gesture/goal
 - Hand gesture interpreter:  receives action goal from: /execute_gesture/goal
   publishes /joint_states (alternative control method)
