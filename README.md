@@ -148,7 +148,11 @@ If you are using different hardware, please create your own setup script accordi
 To launch the virtual hands demo (without requiring hand hardware):
 
 ```bash
-ros2 launch rzv_demo_rps demo_virtual_hand_rps.launch.py
+# For Inspire RH56 hand
+ros2 launch rzv_demo_rps demo_virtual_inspire_rh56_hand.launch.py
+
+# For Ruiyan RH2 hand
+ros2 launch rzv_demo_rps demo_virtual_ruiyan_rh2_hand.launch.py
 ```
 
 To launch the physical Inspire RH56 hand control demo:
