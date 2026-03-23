@@ -34,18 +34,43 @@ Subscribes to string-based RPS pose topics, processes them through the game logi
 
 ## RZ/V ROS2 Package Dependencies
 
-| Category | Package Name | Description |
-|-----------|---------------|-------------|
-| **Base Packages** | `arm_hand_control` | Receive goal to control the dexterous hand for interacting with player. |
-|  | `foxglove_keypoint_publisher` | Publishes bounding boxif for visualization in Foxglove Studio. |
-|  | `rzv_demo_rps` | Main demo package integrating DexHand functionalities on RZ/V platform. |
-|  | `rzv_model` | Contains model definitions and configuration files for the RZ/V system. |
-|  | `rzv_object_detection` | Provides rps pose detection capabilities on Renesas RZ/V platforms. |
-| **For Inspire RH56 DexHand Demo** | `inspire_rh56_urdf` | URDF models for the Inspire RH56 dexterous hand. |
-|  | `inspire_rh56_dexhand` | Application and control logic for the Inspire RH56 hand. |
-| **For Ruiyan RH2 DexHand Demo** | `ruiyan_rh2_controller` | Control package for the Ruiyan RH2 dexterous hand. |
-|  | `ruiyan_rh2_urdf` | URDF models for the Ruiyan RH2 hand. |
-|  | `ruiyan_rh2_dexhand` | Control node for the Ruiyan RH2 hand. |
+## Base Packages
+| Package Name | Description |
+|---------------|-------------|
+| `arm_hand_control` | Receive goal to control the dexterous hand for interacting with player. |
+| `foxglove_keypoint_publisher` | Publishes bounding boxif for visualization in Foxglove Studio. |
+| `rzv_demo_rps` | Main demo package integrating DexHand functionalities on RZ/V platform. |
+
+## Model Zoo
+
+### Base Models
+| Package Name | Description |
+|---------------|-------------|
+| `rzv_model` | AI model abstractions and implementations for RZ/V MPU platforms. |
+| `rzv_model_utils_ros2` | Collection of helper functions for integrating AI models into ROS 2 applications. |
+
+### Hand Models
+| Package Name | Description |
+|---------------|-------------|
+| `rzv_yolov8` | YOLOv8 object detection models optimized for RZ/V processors with DRP-AI acceleration. |
+
+### Application
+| Package Name | Description |
+|---------------|-------------|
+| `rzv_object_detection` | Object detection capabilities and ROS2 node to publish detection topics for demos. |
+
+### Inspire RH56 DexHand Demo
+| Package Name | Description |
+|---------------|-------------|
+| `inspire_rh56_urdf` | URDF models for the Inspire RH56 dexterous hand. |
+| `inspire_rh56_dexhand` | Application and control logic for the Inspire RH56 hand. |
+
+### Ruiyan RH2 DexHand Demo
+| Package Name | Description |
+|---------------|-------------|
+| `ruiyan_rh2_controller` | Control package for the Ruiyan RH2 dexterous hand. |
+| `ruiyan_rh2_urdf` | URDF models for the Ruiyan RH2 hand. |
+| `ruiyan_rh2_dexhand` | Control node for the Ruiyan RH2 hand. |
 
 ## Prerequisites
 ### Hardware Requirements:
