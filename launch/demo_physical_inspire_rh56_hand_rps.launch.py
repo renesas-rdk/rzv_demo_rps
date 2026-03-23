@@ -99,7 +99,7 @@ def generate_launch_description():
         remappings=[
             ('/image_raw', '/image_raw'),
             ('/bounding_box', '/object_detection/bounding_box'),
-            ('/rps_hand_detect', '/object_detection/rps_hand_detect')
+            ('/object_detect', '/object_detection/rps_hand_detect')
         ],
         output='screen',
         arguments=['--ros-args', '--log-level', 'INFO']
