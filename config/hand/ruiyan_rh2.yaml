@@ -28,6 +28,5 @@ hand_config:
     - name: pinky_proximal_joint
       finger: pinky
       role: flex
-      limit_max: 1.54
-        # 0 to 88.5 degrees
+      limit_max: 1.54 # 0 to 88.5 degrees
       default_position: 0.0
