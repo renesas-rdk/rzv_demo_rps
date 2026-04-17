@@ -140,15 +140,16 @@ ros2 launch rzv_demo_rps demo_inspire_rh56_hand_rps.launch.py use_mock_hardware:
 To launch the physical RuiYan RH2 hand control demo:
 
 ```bash
-ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps.launch.py use_mock_hardware:=false video_device:=/dev/video0 can_port:=can2
+ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps.launch.py use_mock_hardware:=false video_device:=/dev/video0 can_interface:=can2
 ```
 
 ### Launch Arguments
 - `video_device`: Specify the camera device (default: `/dev/video0`)
-- `landmark_model_type`: Type of hand landmark model to use (default: `mediapipe_hand_landmark`, others: `rtmpose_hand`, `hrnetv2_hand_landmark`)
-- `serial_port`: Serial port for the physical Inspire RH56 DexHand (default: `/dev/ttyUSB0`, only for `demo_physical_hand.launch.py`)
-- `can_port`: Can port for the physical RuiYan RH2 DexHand (default: `can2`, only for `demo_ruiyan_rh2_hand.launch.py`)
-- `use_mock_hardware`: Set to "true" for simulation/testing without physical hardware
+- `serial_port`: Serial port for the physical Inspire RH56 DexHand (default: `/dev/ttyUSB0`)
+- `can_interface`: CAN interface for the physical RuiYan RH2 DexHand (default: `can2`)
+- `hand_speed`: Target motor speed for all joints, 0-1000 (default: `1000`)
+- `hand_side`: Which hand to control: `left` or `right` (default: `left`)
+- `use_mock_hardware`: Set to `true` for simulation/testing without physical hardware
 
 ## Launch Files
  
