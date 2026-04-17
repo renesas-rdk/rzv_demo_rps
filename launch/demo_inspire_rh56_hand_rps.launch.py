@@ -55,6 +55,7 @@ def launch_setup(context, *args, **kwargs):
     use_mock_hardware_value = LaunchConfiguration("use_mock_hardware").perform(context)
     hand_side_value = LaunchConfiguration("hand_side").perform(context)
     serial_port_value = LaunchConfiguration("serial_port").perform(context)
+    hand_speed_value = LaunchConfiguration("hand_speed").perform(context)
     video_device = LaunchConfiguration("video_device")
 
     # Define package directories
@@ -95,6 +96,7 @@ def launch_setup(context, *args, **kwargs):
             "hand_side": hand_side_value,
             "use_mock_hardware": use_mock_hardware_value,
             "serial_port": serial_port_value,
+            "hand_speed": hand_speed_value,
         }.items(),
     )
     nodes.append(robot_bringup_launch)
@@ -208,6 +210,11 @@ def generate_launch_description():
                 "serial_port",
                 default_value="/dev/ttyUSB0",
                 description="Serial port for the physical DexHand",
+            ),
+            DeclareLaunchArgument(
+                "hand_speed",
+                default_value="1000",
+                description="Target motor speed for all joints (0-1000, 1000 = max speed)",
             ),
             DeclareLaunchArgument(
                 "hand_side",
