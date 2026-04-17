@@ -30,5 +30,3 @@ hand_config:
       role: flex
       limit_max: 1.47
       default_position: 0.0
-
-  publish_rate: 10  # Hz
