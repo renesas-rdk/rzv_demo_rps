@@ -1,0 +1,32 @@
+hand_config:
+  joints:
+    - name: thumb_proximal_yaw_joint
+      finger: thumb
+      role: yaw
+      limit_max: 1.265   # 0 to 72.5 degrees
+      default_position: 0.0
+    - name: thumb_proximal_pitch_joint
+      finger: thumb
+      role: pitch
+      limit_max: 0.5236 # 0 to 35 degrees
+      default_position: 0.0
+    - name: index_proximal_joint
+      finger: index
+      role: flex
+      limit_max: 1.517 # 0 to 87 degrees
+      default_position: 0.0
+    - name: middle_proximal_joint
+      finger: middle
+      role: flex
+      limit_max: 1.57  # 0 to 90 degrees
+      default_position: 0.0
+    - name: ring_proximal_joint
+      finger: ring
+      role: flex
+      limit_max: 1.57   # 0 to 90 degrees
+      default_position: 0.0
+    - name: pinky_proximal_joint
+      finger: pinky
+      role: flex
+      limit_max: 1.54 # 0 to 88.5 degrees
+      default_position: 0.0

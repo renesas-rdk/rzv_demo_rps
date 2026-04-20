@@ -59,18 +59,20 @@ Subscribes to string-based RPS pose topics, processes them through the game logi
 |---------------|-------------|
 | `rzv_object_detection` | Object detection capabilities and ROS2 node to publish detection topics for demos. |
 
-### Inspire RH56 DexHand Demo
+### Inspire RH56 Hand Packages
+
 | Package Name | Description |
-|---------------|-------------|
-| `inspire_rh56_urdf` | URDF models for the Inspire RH56 dexterous hand. |
-| `inspire_rh56_dexhand` | Application and control logic for the Inspire RH56 hand. |
+|--------------|-------------|
+| `inspire_rh56_hand_description` | URDF and mesh models for the Inspire RH56 dexterous hand. |
+| `inspire_rh56_hand_ros2_control` | ros2_control configuration and hardware interface for the Inspire RH56 hand. |
+| `inspire_rh56_hand_bringup` | Launch files to start the Inspire RH56 hand system, including controllers and visualization. |
 
 ### Ruiyan RH2 DexHand Demo
 | Package Name | Description |
-|---------------|-------------|
-| `ruiyan_rh2_controller` | Control package for the Ruiyan RH2 dexterous hand. |
-| `ruiyan_rh2_urdf` | URDF models for the Ruiyan RH2 hand. |
-| `ruiyan_rh2_dexhand` | Control node for the Ruiyan RH2 hand. |
+|--------------|-------------|
+| `ruiyan_rh2_hand_description` | URDF and mesh models for the Ruiyan RH2 dexterous hand. |
+| `ruiyan_rh2_hand_ros2_control` | ros2_control configuration and hardware interface for the Ruiyan RH2 hand. |
+| `ruiyan_rh2_hand_bringup` | Launch files to start the Ruiyan RH2 hand system, including controllers and visualization. |
 
 ## Prerequisites
 ### Hardware Requirements:
@@ -123,112 +125,98 @@ To launch the virtual hands demo (without requiring hand hardware):
 
 ```bash
 # For Inspire RH56 hand
-ros2 launch rzv_demo_rps demo_virtual_inspire_rh56_hand.launch.py
+ros2 launch rzv_demo_rps demo_inspire_rh56_hand_rps.launch.py use_mock_hardware:=true
 
 # For Ruiyan RH2 hand
-ros2 launch rzv_demo_rps demo_virtual_ruiyan_rh2_hand.launch.py
+ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps.launch.py use_mock_hardware:=true
 ```
 
 To launch the physical Inspire RH56 hand control demo:
 
 ```bash
-ros2 launch rzv_demo_rps demo_physical_inspire_rh56_hand_rps.launch.py video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
+ros2 launch rzv_demo_rps demo_inspire_rh56_hand_rps.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
 ```
 
 To launch the physical RuiYan RH2 hand control demo:
 
 ```bash
-ros2 launch rzv_demo_rps demo_physical_ruiyan_rh2_hand_rps.launch.py video_device:=/dev/video0 can_port:=can2
+ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps.launch.py use_mock_hardware:=false video_device:=/dev/video0 can_interface:=can2
 ```
 
 ### Launch Arguments
 - `video_device`: Specify the camera device (default: `/dev/video0`)
-- `serial_port`: Serial port for the physical Inspire RH56 DexHand (default: `/dev/ttyUSB0`, only for `demo_physical_hand.launch.py`)
-- `can_port`: Can port for the physical RuiYan RH2 DexHand (default: `can2`, only for `demo_physical_ruiyan_rh2_hand.launch.py`)
-
+- `serial_port`: Serial port for the physical Inspire RH56 DexHand (default: `/dev/ttyUSB0`)
+- `can_interface`: CAN interface for the physical RuiYan RH2 DexHand (default: `can2`)
+- `hand_speed`: Target motor speed for all joints, 0-1000 (default: `1000`)
+- `hand_side`: Which hand to control: `left` or `right` (default: `left`)
+- `use_mock_hardware`: Set to `true` for simulation/testing without physical hardware
 
 ## Launch Files
-
-#### demo_virtual_inspire_rh56_hand.launch.py and demo_virtual_ruiyan_rh2_hand.launch.py
-
-This launch file sets up a camera-based hand tracking system that controls virtual Inspire RH56 hands or Ruiyan RH2 hands:
-
+ 
+### demo_inspire_rh56_hand_rps.launch.py
+ 
+This launch file runs a Rock-Paper-Scissors game demo that controls a physical Inspire RH56 dexterous hand using camera-based hand pose detection:
+ 
 ```
 PIPELINE:
-camera → object detection  → rps controller → hand gesture interpreters → urdf visualization
-
-Topic flow:
-- Camera: publishes /image_raw
-- Object detection: subscribes to /image_raw
-  publishes /object_detection_node/bounding_box, /object_detection_node/rps_hand_detect
-- Visualization: subscribes to /object_detection_node/bounding_box and publishes visualization markers
-- RPS Controller: subscribes to /object_detection_node/rps_hand_detect
+camera → object detection → rps game controller → ros2_control position controller
+  → joint_state_broadcaster → urdf visualization + real hand control
+ 
+TOPIC FLOW:
+- Camera publishes: /image_raw
+- Object detection subscribes to: /image_raw
+  publishes: /object_detection/bounding_box, /object_detection/rps_hand_detect
+- Visualization node subscribes to: /object_detection/bounding_box
+  publishes: /bbox_visualization
+- RPS Controller subscribes to: /object_detection/rps_hand_detect
   sends action goal to: /execute_gesture/goal
-- Hand gesture interpreter:  receives action goal from: /execute_gesture/goal
-  publishes /joint_states (alternative control method)
-- URDF publishers: subscribe to /joint_states for hand visualization
+- Hand gesture interpreter acts as action server on: /execute_gesture/goal
+  publishes: /inspire_rh56_hand_joint_position_controller/commands
+- ros2_control position controller subscribes to: /inspire_rh56_hand_joint_position_controller/commands
+- joint_state_broadcaster publishes: /joint_states
+- URDF publishers subscribe to: /joint_states for hand visualization
 ```
-
+ 
 Components included in this launch file:
-1. **Camera Node**: Captures video input for hand tracking
-2. **Object Detection Node**: Detects rock–paper–scissors hand poses
-3. **Visualization Nodes**: Create visual representations for Foxglove Studio
-4. **RPS Controller Node**: Converts detected hand poses to logic game
-5. **Hand Gesture Interpreter**: Provides control through gesture commands.
-6. **URDF State Publishers**: Visualize both right and left hands
-7. **Foxglove Bridge**: Enables visualization through Foxglove Studio
-
-#### demo_physical_inspire_rh56_hand_rps.launch.py
-
-This launch file extends the virtual hand demo to also control a physical Inspire RH56 dexterous hand:
-
+1. **Robot Bringup** (`inspire_rh56_hand_bringup`): Initializes ros2_control with the Inspire RH56 joint position controller and joint state broadcaster; connects to the physical hand via serial port
+2. **Camera Node**: Captures video input for hand pose detection via V4L2
+3. **Object Detection Node**: Detects rock–paper–scissors hand poses using YOLOv8
+4. **Visualization Node**: Creates bounding box visual representation for Foxglove Studio
+5. **RPS Controller Node**: Subscribes to detected hand poses and sends gesture action goals based on RPS game logic
+6. **Hand Gesture Interpreter**: Acts as action server; executes gesture commands by publishing joint position commands
+ 
+### demo_ruiyan_rh2_hand_rps.launch.py
+ 
+This launch file runs a Rock-Paper-Scissors game demo that controls a physical RuiYan RH2 dexterous hand using camera-based hand pose detection:
+ 
 ```
 PIPELINE:
-camera → object detection  → rps controller → hand gesture interpreters → urdf visualization + real hand control
-
-Topic flow:
-- Camera: publishes /image_raw
-- Object detection: subscribes to /image_raw
-  publishes /object_detection_node/bounding_box, /object_detection_node/rps_hand_detect
-- Visualization: subscribes to /object_detection_node/bounding_box and publishes visualization markers
-- RPS Controller: subscribes to /object_detection_node/rps_hand_detect
+camera → object detection → rps game controller → ros2_control position controller
+  → joint_state_broadcaster → urdf visualization + real hand control
+ 
+TOPIC FLOW:
+- Camera publishes: /image_raw
+- Object detection subscribes to: /image_raw
+  publishes: /object_detection/bounding_box, /object_detection/rps_hand_detect
+- Visualization node subscribes to: /object_detection/bounding_box
+  publishes: /bbox_visualization
+- RPS Controller subscribes to: /object_detection/rps_hand_detect
   sends action goal to: /execute_gesture/goal
-- Hand gesture interpreter:  receives action goal from: /execute_gesture/goal
-  publishes /joint_states (alternative control method)
-- URDF publishers: subscribe to /joint_states for hand visualization
-- Physical hand controller: subscribes to /joint_states to control the real DexHand
+- Hand gesture interpreter acts as action server on: /execute_gesture/goal
+  publishes: /ruiyan_rh2_hand_joint_position_controller/commands
+- ros2_control position controller subscribes to: /ruiyan_rh2_hand_joint_position_controller/commands
+- joint_state_broadcaster publishes: /joint_states
+- URDF publishers subscribe to: /joint_states for hand visualization
 ```
-
+ 
 Components included in this launch file:
-1. **Camera Node**: Captures video input for hand tracking
-2. **Object Detecction Node**: Detects rock–paper–scissors hand poses
-3. **Visualization Nodes**: Create visual representations for Foxglove Studio
-4. **RPS Controller Node**: Converts detected hand poses to logic game
-5. **Hand Gesture Interpreter**: Provides control through gesture commands.
-6. **URDF State Publishers**: Visualize both right and left hands
-7. **Real Hand Control**: Controls physical Inspire RH56 DexHand via serial connection
-8. **Foxglove Bridge**: Enables visualization through Foxglove Studio
+1. **Robot Bringup** (`ruiyan_rh2_hand_bringup`): Initializes ros2_control with the RuiYan RH2 joint position controller and joint state broadcaster; connects to the physical hand via CAN interface
+2. **Camera Node**: Captures video input for hand pose detection via V4L2
+3. **Object Detection Node**: Detects rock–paper–scissors hand poses using YOLOv8
+4. **Visualization Node**: Creates bounding box visual representation for Foxglove Studio
+5. **RPS Controller Node**: Subscribes to detected hand poses and sends gesture action goals based on RPS game logic
+6. **Hand Gesture Interpreter**: Acts as action server; executes gesture commands by publishing joint position commands
 
-#### demo_physical_ruiyan_rh2_hand_rps.launch.py
-
-This launch file extends the virtual hand demo to also control a physical RuiYan RH2 dexterous hand:
-```
-Pipeline:
-camera → object detection  → rps controller → hand gesture interpreters → urdf visualization + real hand control
-
-Topic flow:
-- Camera: publishes /image_raw
-- Object detection: subscribes to /image_raw
-  publishes /object_detection_node/bounding_box, /object_detection_node/rps_hand_detect
-- Visualization: subscribes to /object_detection_node/bounding_box and publishes visualization markers
-- RPS Controller: subscribes to /object_detection_node/rps_hand_detect
-  sends action goal to: /execute_gesture/goal
-- Hand gesture interpreter:  receives action goal from: /execute_gesture/goal
-  publishes /joint_states (alternative control method)
-- URDF publishers: subscribe to /joint_states for hand visualization
-- Ruiyan RH2 DexHand: Perform message conversion: subscribes to /joint_states, publishes /ryhand6_cmd
-- Physical hand controller: subscribes to /ryhand6_cmd to control the real DexHand
-```
 ## Visualization with Foxglove Studio
 
 The demo can be visualized using Foxglove Studio by connecting to the Foxglove Bridge websocket.
