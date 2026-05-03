@@ -34,6 +34,10 @@
   <exec_depend>inspire_rh56_hand_description</exec_depend>
   <exec_depend>inspire_rh56_hand_ros2_control</exec_depend>
 
+  <exec_depend>inspire_rh56e2_hand_bringup</exec_depend>
+  <exec_depend>inspire_rh56e2_hand_description</exec_depend>
+  <exec_depend>inspire_rh56e2_hand_ros2_control</exec_depend>
+
   <exec_depend>ruiyan_rh2_hand_bringup</exec_depend>
   <exec_depend>ruiyan_rh2_hand_description</exec_depend>
   <exec_depend>ruiyan_rh2_hand_ros2_control</exec_depend>
