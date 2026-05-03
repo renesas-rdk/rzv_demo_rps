@@ -149,16 +149,34 @@ To launch the physical Inspire RH56 hand control demo:
 ros2 launch rzv_demo_rps demo_inspire_rh56_hand_rps.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
 ```
 
+To launch the low-latency always-win Inspire RH56 demo:
+
+```bash
+ros2 launch rzv_demo_rps demo_inspire_rh56_hand_rps_always_win.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
+```
+
 To launch the physical Inspire RH56E2 hand control demo:
 
 ```bash
 ros2 launch rzv_demo_rps demo_inspire_rh56e2_hand_rps.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
 ```
 
+To launch the low-latency always-win Inspire RH56E2 demo:
+
+```bash
+ros2 launch rzv_demo_rps demo_inspire_rh56e2_hand_rps_always_win.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
+```
+
 To launch the physical RuiYan RH2 hand control demo:
 
 ```bash
 ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps.launch.py use_mock_hardware:=false video_device:=/dev/video0 can_interface:=can2
+```
+
+To launch the low-latency always-win RuiYan RH2 demo:
+
+```bash
+ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps_always_win.launch.py use_mock_hardware:=false video_device:=/dev/video0 can_interface:=can2
 ```
 
 ### Launch Arguments
@@ -203,6 +221,10 @@ Components included in this launch file:
 5. **RPS Controller Node**: Subscribes to detected hand poses and sends gesture action goals based on RPS game logic
 6. **Hand Gesture Interpreter**: Acts as action server; executes gesture commands by publishing joint position commands
 
+### demo_inspire_rh56_hand_rps_always_win.launch.py
+
+This launch file runs the low-latency always-win mode for the Inspire RH56 hand. It uses the same camera and YOLOv8 RPS detector, but the RPS controller immediately responds with the gesture that beats the detected user pose.
+
 ### demo_inspire_rh56e2_hand_rps.launch.py
 
 This launch file runs a Rock-Paper-Scissors game demo that controls a physical Inspire RH56E2 dexterous hand using camera-based hand pose detection:
@@ -234,6 +256,16 @@ Components included in this launch file:
 4. **Visualization Node**: Creates bounding box visual representation for Foxglove Studio
 5. **RPS Controller Node**: Subscribes to detected hand poses and sends gesture action goals based on RPS game logic
 6. **Hand Gesture Interpreter**: Acts as action server; executes gesture commands by publishing joint position commands
+
+### demo_inspire_rh56e2_hand_rps_always_win.launch.py
+
+This launch file runs the low-latency always-win mode for the Inspire RH56E2 hand. It keeps the same camera and YOLOv8 RPS detector, but the RPS controller immediately responds with the gesture that beats the detected user pose:
+
+- User `paper` -> robot `scissor`
+- User `rock` -> robot `paper`
+- User `scissor` -> robot `rock`
+
+The controller publishes `ALWAYS_WIN` status on `/game_status`, and `config/foxglove/demo_rps_always_win.json` provides a separate Foxglove layout for inspecting detection, inference timing, game status, hand commands, and hand visualization across the supported hands. The original `demo_rps.json` layout is unchanged.
  
 ### demo_ruiyan_rh2_hand_rps.launch.py
  
@@ -267,6 +299,10 @@ Components included in this launch file:
 5. **RPS Controller Node**: Subscribes to detected hand poses and sends gesture action goals based on RPS game logic
 6. **Hand Gesture Interpreter**: Acts as action server; executes gesture commands by publishing joint position commands
 
+### demo_ruiyan_rh2_hand_rps_always_win.launch.py
+
+This launch file runs the low-latency always-win mode for the RuiYan RH2 hand. It uses the same camera and YOLOv8 RPS detector, but the RPS controller immediately responds with the gesture that beats the detected user pose.
+
 ## Visualization with Foxglove Studio
 
 The demo can be visualized using Foxglove Studio by connecting to the Foxglove Bridge websocket.
@@ -281,6 +317,8 @@ For the best visualization experience, a preset panel layout is provided:
 4. Select "Import layout from file"
 5. Navigate to the `config/foxglove/demo_rps.json` file in the rzv_demo_rps package
 6. Click "Open" to load the preset layout
+
+For always-win mode, import `config/foxglove/demo_rps_always_win.json` instead.
 
 The preset layout provides:
 - Camera view with hand landmark overlays

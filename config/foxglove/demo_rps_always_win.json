@@ -1,0 +1,264 @@
+{
+  "configById": {
+    "Image!alwayswin": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {
+        "imageTopic": "/image_raw",
+        "annotations": {
+          "/bbox_visualization": {
+            "visible": true
+          }
+        }
+      },
+      "synchronize": false
+    },
+    "Indicator!mode": {
+      "path": "/game_status.game_status",
+      "style": "background",
+      "fontSize": 24,
+      "fallbackColor": "#8d8d8d",
+      "fallbackLabel": "Always-win mode waiting",
+      "rules": [
+        {
+          "operator": "=",
+          "rawValue": "ALWAYS_WIN",
+          "color": "#59f1ff",
+          "label": "ALWAYS WIN"
+        }
+      ]
+    },
+    "Indicator!result": {
+      "path": "/game_status.result",
+      "style": "background",
+      "fontSize": 28,
+      "fallbackColor": "#8d8d8d",
+      "fallbackLabel": "Result: -",
+      "rules": [
+        {
+          "operator": "=",
+          "rawValue": "victory",
+          "color": "#1cd01c",
+          "label": "Robot wins"
+        }
+      ]
+    },
+    "Indicator!opponent": {
+      "path": "/game_status.user_detect",
+      "style": "background",
+      "fontSize": 18,
+      "fallbackColor": "#8d8d8d",
+      "fallbackLabel": "Opponent: -",
+      "rules": [
+        {
+          "operator": "=",
+          "rawValue": "paper",
+          "color": "#f0d35c",
+          "label": "Opponent: paper"
+        },
+        {
+          "operator": "=",
+          "rawValue": "rock",
+          "color": "#bdbdbd",
+          "label": "Opponent: rock"
+        },
+        {
+          "operator": "=",
+          "rawValue": "scissor",
+          "color": "#75a7ff",
+          "label": "Opponent: scissors"
+        }
+      ]
+    },
+    "Indicator!robot": {
+      "path": "/game_status.computer_detect",
+      "style": "background",
+      "fontSize": 18,
+      "fallbackColor": "#8d8d8d",
+      "fallbackLabel": "Robot: -",
+      "rules": [
+        {
+          "operator": "=",
+          "rawValue": "paper",
+          "color": "#f0d35c",
+          "label": "Robot: paper"
+        },
+        {
+          "operator": "=",
+          "rawValue": "rock",
+          "color": "#bdbdbd",
+          "label": "Robot: rock"
+        },
+        {
+          "operator": "=",
+          "rawValue": "scissor",
+          "color": "#75a7ff",
+          "label": "Robot: scissors"
+        }
+      ]
+    },
+    "3D!hand": {
+      "cameraState": {
+        "perspective": true,
+        "distance": 0.6768749999999998,
+        "phi": 56.00000000000001,
+        "thetaOffset": -101.00000000000001,
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "fovy": 45,
+        "near": 0.1,
+        "far": 5000
+      },
+      "followMode": "follow-none",
+      "scene": {
+        "meshUpAxis": "z_up",
+        "transforms": {
+          "visible": false
+        },
+        "backgroundColor": "#272727"
+      },
+      "transforms": {},
+      "topics": {
+        "/robot_description": {
+          "visible": true
+        }
+      },
+      "layers": {
+        "grid": {
+          "visible": true,
+          "frameLocked": true,
+          "label": "Grid",
+          "instanceId": "3f965aad-1a64-4e54-9138-53b45b2a7858",
+          "layerId": "foxglove.Grid",
+          "size": 10,
+          "divisions": 10,
+          "lineWidth": 1,
+          "color": "#248eff",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "b7d8f907-dc8c-45c4-b4d0-4ddccbdc767d": {
+          "displayMode": "auto",
+          "fallbackColor": "#ffffff",
+          "showAxis": false,
+          "showOutlines": true,
+          "visible": true,
+          "frameLocked": true,
+          "instanceId": "b7d8f907-dc8c-45c4-b4d0-4ddccbdc767d",
+          "label": "URDF",
+          "layerId": "foxglove.Urdf",
+          "sourceType": "topic",
+          "url": "",
+          "filePath": "",
+          "parameter": "",
+          "topic": "/robot_description",
+          "framePrefix": "",
+          "order": 1,
+          "links": {},
+          "axisScale": 1,
+          "opacity": 1
+        }
+      },
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {},
+      "followTf": "world",
+      "synchronize": false
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "first": "Image!alwayswin",
+    "second": {
+      "first": {
+        "first": "Indicator!mode",
+        "second": {
+          "first": "Indicator!result",
+          "second": {
+            "first": "Indicator!opponent",
+            "second": "Indicator!robot",
+            "direction": "column"
+          },
+          "direction": "row"
+        },
+        "direction": "column",
+        "splitPercentage": 46.10877998574935
+      },
+      "second": "3D!hand",
+      "direction": "column",
+      "splitPercentage": 42.308605811099675
+    },
+    "direction": "row",
+    "splitPercentage": 54
+  }
+}

@@ -83,6 +83,9 @@ private:
   void handle_playing_state();
   void handle_result_state();
 
+  bool is_valid_rps_pose(const std::string & pose) const;
+  void handle_always_win_pose(const std::string & user_pose);
+  std::string get_winning_rps_choice(const std::string & user) const;
   std::string determine_winner(std::string user, std::string computer);
   std::string get_random_rps_choice();
   std_msgs::msg::String latest;  // Store the latest detected pose
@@ -90,6 +93,8 @@ private:
   std::string computer_choice_;
   bool pose_detected_;
   std::string result_game_;
+  bool always_win_mode_;
+  std::string last_always_win_robot_choice_;
 
   //===== Helper function to control state machine =====
   void set_state(GameState state);
