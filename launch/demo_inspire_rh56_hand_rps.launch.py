@@ -62,12 +62,10 @@ def launch_setup(context, *args, **kwargs):
     foxglove_keypoint_pkg_dir = get_package_share_directory(
         "foxglove_keypoint_publisher"
     )
-    rzv_demo_dexhand_dir = get_package_share_directory("rzv_demo_dexhand")
+    rzv_demo_rps_dir = get_package_share_directory("rzv_demo_rps")
 
     # Shared hand config path used by both interpreter nodes
-    hand_config_path = os.path.join(
-        rzv_demo_dexhand_dir, "config/hand/inspire_rh56.yaml"
-    )
+    hand_config_path = os.path.join(rzv_demo_rps_dir, "config/hand/inspire_rh56.yaml")
 
     # Accumulate all nodes/nodes to return
     nodes = []
