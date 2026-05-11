@@ -26,8 +26,18 @@
 using std::placeholders::_1;
 namespace rzv_demo_rps
 {
-RPSGameController::RPSGameController() : Node("rps_game_controller"), state_(GameState::READY)
+RPSGameController::RPSGameController()
+: Node("rps_game_controller"),
+  pose_detected_(false),
+  always_win_mode_(false),
+  state_(GameState::READY),
+  check_count_(0),
+  goal_active_(false),
+  game_started_(false),
+  current_gesture_idx_(0)
 {
+  always_win_mode_ = this->declare_parameter<bool>("always_win_mode", false);
+
   auto qos = rclcpp::QoS(rclcpp::KeepLast(1)).best_effort().durability_volatile();
 
   hand_pose_trigger_sub_ = create_subscription<std_msgs::msg::String>(
@@ -38,7 +48,7 @@ RPSGameController::RPSGameController() : Node("rps_game_controller"), state_(Gam
   game_info_pub_ = this->create_publisher<rzv_demo_rps::msg::GameStatus>("game_status", 10);
 
   // Publish initial status
-  publish_status("Ready", "-", "-", "-");
+  publish_status(always_win_mode_ ? "ALWAYS_WIN" : "Ready", "-", "-", "-");
 }
 
 // Publish game status
@@ -65,14 +75,20 @@ void RPSGameController::trigger_game_start(const std_msgs::msg::String::SharedPt
 {
   // Trim the incoming message
   std::string data = boost::algorithm::trim_copy(msg->data);
-  // Check for valid poses
-  if (data == "rock" || data == "paper" || data == "scissor") {
-    RCLCPP_INFO(this->get_logger(), "Detected valid pose: %s", data.c_str());
-
-    // Store the user choice
-    latest.data = data;
-    start_capture_ = std::chrono::high_resolution_clock::now();
+  if (!is_valid_rps_pose(data)) {
+    return;
   }
+
+  if (always_win_mode_) {
+    handle_always_win_pose(data);
+    return;
+  }
+
+  RCLCPP_INFO(this->get_logger(), "Detected valid pose: %s", data.c_str());
+
+  // Store the user choice
+  latest.data = data;
+  start_capture_ = std::chrono::high_resolution_clock::now();
 
   // Check if the game has started
   if (!game_started_) {
@@ -92,6 +108,56 @@ void RPSGameController::trigger_game_start(const std_msgs::msg::String::SharedPt
       gestures_.clear();
     }
   }
+}
+
+bool RPSGameController::is_valid_rps_pose(const std::string & pose) const
+{
+  return pose == "rock" || pose == "paper" || pose == "scissor";
+}
+
+std::string RPSGameController::get_winning_rps_choice(const std::string & user) const
+{
+  if (user == "rock") {
+    return "paper";
+  }
+  if (user == "paper") {
+    return "scissor";
+  }
+  if (user == "scissor") {
+    return "rock";
+  }
+  return "";
+}
+
+void RPSGameController::handle_always_win_pose(const std::string & user_pose)
+{
+  const std::string robot_choice = get_winning_rps_choice(user_pose);
+  if (robot_choice.empty()) {
+    return;
+  }
+
+  if (goal_active_) {
+    RCLCPP_DEBUG_THROTTLE(
+      this->get_logger(), *this->get_clock(), 500,
+      "Skipping always-win update while a gesture is still executing");
+    return;
+  }
+
+  if (robot_choice == last_always_win_robot_choice_) {
+    return;
+  }
+
+  user_choice_.data = user_pose;
+  computer_choice_ = robot_choice;
+  result_game_ = "victory";
+
+  RCLCPP_INFO(
+    this->get_logger(), "Always-win response: user=%s robot=%s", user_choice_.data.c_str(),
+    computer_choice_.c_str());
+
+  publish_status("ALWAYS_WIN", user_choice_.data, computer_choice_, result_game_);
+  send_goal(computer_choice_);
+  last_always_win_robot_choice_ = computer_choice_;
 }
 
 // State:: START
@@ -343,12 +409,18 @@ void RPSGameController::result_callback(const GoalHandleExecuteGesture::WrappedR
       RCLCPP_INFO(this->get_logger(), "Goal was finished");
       break;
     case rclcpp_action::ResultCode::ABORTED:
+      goal_active_ = false;
+      last_always_win_robot_choice_.clear();
       RCLCPP_ERROR(this->get_logger(), "Goal was aborted");
       break;
     case rclcpp_action::ResultCode::CANCELED:
+      goal_active_ = false;
+      last_always_win_robot_choice_.clear();
       RCLCPP_ERROR(this->get_logger(), "Goal was canceled");
       break;
     default:
+      goal_active_ = false;
+      last_always_win_robot_choice_.clear();
       RCLCPP_ERROR(this->get_logger(), "Unknown result code");
       break;
   }
