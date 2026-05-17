@@ -42,12 +42,28 @@ def launch_setup(context, *args, **kwargs):
     - User paper -> robot scissor
     - User rock -> robot paper
     - User scissor -> robot rock
+
+    Detector selection (via 'detector' argument):
+    - yolov8 (default): executable=yolov8_object_detection, model_type=yolov8_rps
+    - yolox:            executable=yolox_rps_detection,     model_type=yolox_s_rps
     """
     use_mock_hardware_value = LaunchConfiguration("use_mock_hardware").perform(context)
     hand_side_value = LaunchConfiguration("hand_side").perform(context)
     serial_port_value = LaunchConfiguration("serial_port").perform(context)
     hand_speed_value = LaunchConfiguration("hand_speed").perform(context)
     video_device = LaunchConfiguration("video_device")
+    detector_value = LaunchConfiguration("detector").perform(context)
+
+    # Select AI model based on 'detector' argument
+    detector_configs = {
+        "yolov8": {"executable": "yolov8_object_detection", "model_type": "yolov8_rps"},
+        "yolox":  {"executable": "yolox_rps_detection",      "model_type": "yolox_s_rps"},
+    }
+    if detector_value not in detector_configs:
+        raise RuntimeError(
+            f"Unknown detector '{detector_value}'. Valid options: {list(detector_configs.keys())}"
+        )
+    detector_cfg = detector_configs[detector_value]
 
     foxglove_keypoint_pkg_dir = get_package_share_directory(
         "foxglove_keypoint_publisher"
@@ -99,11 +115,11 @@ def launch_setup(context, *args, **kwargs):
 
     object_detection_node = Node(
         package="rzv_object_detection",
-        executable="yolov8_object_detection",
+        executable=detector_cfg["executable"],
         name="object_detection",
         parameters=[
             {
-                "model_type": "yolov8_rps",
+                "model_type": detector_cfg["model_type"],
                 "processing_queue_size": 1,
                 "confidence_threshold": 0.8,
                 "iou_threshold": 0.3,
@@ -197,6 +213,11 @@ def generate_launch_description():
                 "video_device",
                 default_value="/dev/video0",
                 description="Video device path for camera input",
+            ),
+            DeclareLaunchArgument(
+                "detector",
+                default_value="yolov8",
+                description="AI detector to use: 'yolov8' (yolov8_rps model) or 'yolox' (yolox_s_rps model)",
             ),
             OpaqueFunction(function=launch_setup),
         ]

@@ -152,7 +152,11 @@ ros2 launch rzv_demo_rps demo_inspire_rh56_hand_rps.launch.py use_mock_hardware:
 To launch the low-latency always-win Inspire RH56 demo:
 
 ```bash
+# With YOLOv8 (default)
 ros2 launch rzv_demo_rps demo_inspire_rh56_hand_rps_always_win.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
+
+# With YOLOX
+ros2 launch rzv_demo_rps demo_inspire_rh56_hand_rps_always_win.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0 detector:=yolox
 ```
 
 To launch the physical Inspire RH56E2 hand control demo:
@@ -164,7 +168,11 @@ ros2 launch rzv_demo_rps demo_inspire_rh56e2_hand_rps.launch.py use_mock_hardwar
 To launch the low-latency always-win Inspire RH56E2 demo:
 
 ```bash
+# With YOLOv8 (default)
 ros2 launch rzv_demo_rps demo_inspire_rh56e2_hand_rps_always_win.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
+
+# With YOLOX
+ros2 launch rzv_demo_rps demo_inspire_rh56e2_hand_rps_always_win.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0 detector:=yolox
 ```
 
 To launch the physical RuiYan RH2 hand control demo:
@@ -176,7 +184,11 @@ ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps.launch.py use_mock_hardware:=f
 To launch the low-latency always-win RuiYan RH2 demo:
 
 ```bash
+# With YOLOv8 (default)
 ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps_always_win.launch.py use_mock_hardware:=false video_device:=/dev/video0 can_interface:=can2
+
+# With YOLOX
+ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps_always_win.launch.py use_mock_hardware:=false video_device:=/dev/video0 can_interface:=can2 detector:=yolox
 ```
 
 ### Launch Arguments
@@ -186,6 +198,7 @@ ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps_always_win.launch.py use_mock_
 - `hand_speed`: Target motor speed for all joints, 0-1000 (default: `1000`)
 - `hand_side`: Which hand to control: `left` or `right` (default: `left`)
 - `use_mock_hardware`: Set to `true` for simulation/testing without physical hardware
+- `detector`: AI detector to use in always-win launch files: `yolov8` (default) or `yolox`
 
 ## Launch Files
  
@@ -223,7 +236,10 @@ Components included in this launch file:
 
 ### demo_inspire_rh56_hand_rps_always_win.launch.py
 
-This launch file runs the low-latency always-win mode for the Inspire RH56 hand. It uses the same camera and YOLOv8 RPS detector, but the RPS controller immediately responds with the gesture that beats the detected user pose.
+This launch file runs the low-latency always-win mode for the Inspire RH56 hand. The RPS controller immediately responds with the gesture that beats the detected user pose. The AI detector is selectable at launch time via the `detector` argument:
+
+- `detector:=yolov8` (default) — uses `yolov8_object_detection` with `yolov8_rps` model
+- `detector:=yolox` — uses `yolox_rps_detection` with `yolox_s_rps` model
 
 ### demo_inspire_rh56e2_hand_rps.launch.py
 
@@ -259,11 +275,16 @@ Components included in this launch file:
 
 ### demo_inspire_rh56e2_hand_rps_always_win.launch.py
 
-This launch file runs the low-latency always-win mode for the Inspire RH56E2 hand. It keeps the same camera and YOLOv8 RPS detector, but the RPS controller immediately responds with the gesture that beats the detected user pose:
+This launch file runs the low-latency always-win mode for the Inspire RH56E2 hand. The RPS controller immediately responds with the gesture that beats the detected user pose:
 
 - User `paper` -> robot `scissor`
 - User `rock` -> robot `paper`
 - User `scissor` -> robot `rock`
+
+The AI detector is selectable at launch time via the `detector` argument:
+
+- `detector:=yolov8` (default) — uses `yolov8_object_detection` with `yolov8_rps` model
+- `detector:=yolox` — uses `yolox_rps_detection` with `yolox_s_rps` model
 
 The controller publishes `ALWAYS_WIN` status on `/game_status`, and `config/foxglove/demo_rps_always_win.json` provides a separate Foxglove layout for inspecting detection, inference timing, game status, hand commands, and hand visualization across the supported hands. The original `demo_rps.json` layout is unchanged.
  
@@ -301,7 +322,10 @@ Components included in this launch file:
 
 ### demo_ruiyan_rh2_hand_rps_always_win.launch.py
 
-This launch file runs the low-latency always-win mode for the RuiYan RH2 hand. It uses the same camera and YOLOv8 RPS detector, but the RPS controller immediately responds with the gesture that beats the detected user pose.
+This launch file runs the low-latency always-win mode for the RuiYan RH2 hand. The RPS controller immediately responds with the gesture that beats the detected user pose. The AI detector is selectable at launch time via the `detector` argument:
+
+- `detector:=yolov8` (default) — uses `yolov8_object_detection` with `yolov8_rps` model
+- `detector:=yolox` — uses `yolox_rps_detection` with `yolox_s_rps` model
 
 ## Visualization with Foxglove Studio
 
