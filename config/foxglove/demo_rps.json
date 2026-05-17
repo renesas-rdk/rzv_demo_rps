@@ -319,7 +319,11 @@
           "visible": false
         }
       },
-      "topics": {},
+      "topics": {
+        "/robot_description": {
+          "visible": true
+        }
+      },
       "layers": {
         "grid": {
           "visible": true,
@@ -356,8 +360,8 @@
           "url": "",
           "filePath": "",
           "parameter": "",
-          "topic": "/right_hand/robot_description",
-          "framePrefix": "right_hand/",
+          "topic": "/robot_description",
+          "framePrefix": "",
           "order": 1,
           "showOutlines": false
         }
@@ -372,7 +376,7 @@
         "poseEstimateThetaDeviation": 0.26179939
       },
       "imageMode": {},
-      "followTf": "right_hand/base"
+      "followTf": "world"
     }
   },
   "globalVariables": {},
