@@ -2,10 +2,10 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rzv_demo_rps</name>
-  <version>0.1.0</version>
+  <version>1.1.0</version>
   <description>Demo game package for RZ/V platform with vision, hand control, and visualization </description>
   <maintainer email="dat.nguyen.dn@bp.renesas.com">Dat Nguyen</maintainer>
-  <license>Apache License 2.0</license>
+  <license>AGPL-3.0-only</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

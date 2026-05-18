@@ -359,4 +359,4 @@ This layout ensures all the necessary visualization components are properly set 
 - 3D Hand Model Not Showing: Sometimes, the 3D hand visualization may not appear properly. In such cases, restart the application (either the demo app or visualization tool).
 
 ## License
-Apache License 2.0
+AGPL-3.0-only
