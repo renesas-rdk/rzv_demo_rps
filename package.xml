@@ -21,6 +21,7 @@
 
   <!-- External dependencies -->
   <depend>ament_index_cpp</depend>
+  <depend>yaml-cpp</depend>
 
   <!-- Vision and perception -->
   <exec_depend>rzv_object_detection</exec_depend>
