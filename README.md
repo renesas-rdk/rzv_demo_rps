@@ -198,7 +198,7 @@ ros2 launch rzv_demo_rps demo_ruiyan_rh2_hand_rps_always_win.launch.py use_mock_
 - `hand_speed`: Target motor speed for all joints, 0-1000 (default: `1000`)
 - `hand_side`: Which hand to control: `left` or `right` (default: `left`)
 - `use_mock_hardware`: Set to `true` for simulation/testing without physical hardware
-- `detector`: AI detector to use in always-win launch files: `yolov8` (default) or `yolox`
+- `detector`: AI detector to use in always-win launch files: `yolox` (default) or `yolov8`
 
 ## Launch Files
  
@@ -238,8 +238,8 @@ Components included in this launch file:
 
 This launch file runs the low-latency always-win mode for the Inspire RH56 hand. The RPS controller immediately responds with the gesture that beats the detected user pose. The AI detector is selectable at launch time via the `detector` argument:
 
-- `detector:=yolov8` (default) — uses `yolov8_object_detection` with `yolov8_rps` model
-- `detector:=yolox` — uses `yolox_rps_detection` with `yolox_s_rps` model
+- `detector:=yolox` (default) — uses `yolox_rps_detection` with `yolox_s_rps` model
+- `detector:=yolov8` — uses `yolov8_object_detection` with `yolov8_rps` model
 
 ### demo_inspire_rh56e2_hand_rps.launch.py
 
@@ -283,8 +283,8 @@ This launch file runs the low-latency always-win mode for the Inspire RH56E2 han
 
 The AI detector is selectable at launch time via the `detector` argument:
 
-- `detector:=yolov8` (default) — uses `yolov8_object_detection` with `yolov8_rps` model
-- `detector:=yolox` — uses `yolox_rps_detection` with `yolox_s_rps` model
+- `detector:=yolox` (default) — uses `yolox_rps_detection` with `yolox_s_rps` model
+- `detector:=yolov8` — uses `yolov8_object_detection` with `yolov8_rps` model
 
 The controller publishes `ALWAYS_WIN` status on `/game_status`, and `config/foxglove/demo_rps_always_win.json` provides a separate Foxglove layout for inspecting detection, inference timing, game status, hand commands, and hand visualization across the supported hands. The original `demo_rps.json` layout is unchanged.
  
@@ -324,8 +324,8 @@ Components included in this launch file:
 
 This launch file runs the low-latency always-win mode for the RuiYan RH2 hand. The RPS controller immediately responds with the gesture that beats the detected user pose. The AI detector is selectable at launch time via the `detector` argument:
 
-- `detector:=yolov8` (default) — uses `yolov8_object_detection` with `yolov8_rps` model
-- `detector:=yolox` — uses `yolox_rps_detection` with `yolox_s_rps` model
+- `detector:=yolox` (default) — uses `yolox_rps_detection` with `yolox_s_rps` model
+- `detector:=yolov8` — uses `yolov8_object_detection` with `yolov8_rps` model
 
 ## Visualization with Foxglove Studio
 

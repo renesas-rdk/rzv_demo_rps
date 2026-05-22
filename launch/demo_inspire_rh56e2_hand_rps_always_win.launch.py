@@ -32,8 +32,8 @@ def launch_setup(context, *args, **kwargs):
     - User scissor -> robot rock
 
     Detector selection (via 'detector' argument):
-    - yolov8 (default): executable=yolov8_object_detection, model_type=yolov8_rps
-    - yolox:            executable=yolox_rps_detection,     model_type=yolox_s_rps
+    - yolox (default):  executable=yolox_rps_detection,     model_type=yolox_s_rps
+    - yolov8:           executable=yolov8_object_detection, model_type=yolov8_rps
     """
     use_mock_hardware_value = LaunchConfiguration("use_mock_hardware").perform(context)
     hand_side_value = LaunchConfiguration("hand_side").perform(context)
@@ -204,8 +204,8 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "detector",
-                default_value="yolov8",
-                description="AI detector to use: 'yolov8' (yolov8_rps model) or 'yolox' (yolox_s_rps model)",
+                default_value="yolox",
+                description="AI detector to use: 'yolox' (yolox_s_rps model, default) or 'yolov8' (yolov8_rps model)",
             ),
             OpaqueFunction(function=launch_setup),
         ]
